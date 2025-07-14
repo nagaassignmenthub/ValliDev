@@ -1,0 +1,155 @@
+<template>
+   
+            <template if:true={showSignUp}>
+                <lightning-card title="User Signup" icon-name="standard:contact" class="signup-card">
+                    <template if:true={loading}>
+                        <lightning-spinner alternative-text="Converting Lead..." size="medium"></lightning-spinner>
+                    </template>
+
+                    <div class="slds-p-around_medium">
+                        <div class="slds-grid slds-wrap slds-gutters">
+
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Full Name" value={fullName} onchange={handleChange} data-id="fullName"></lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Email Address" type="email" value={email} onchange={handleChange} placeholder="xxxxxx@abc.com" data-id="email"></lightning-input>
+                                <template if:true={emailError}>
+                                    <div class="slds-text-color_error slds-m-top_xx-small">{emailError}</div>
+                                </template>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Phone Number" value={phone} onchange={handleChange} placeholder="971XXXXXXXXX" data-id="phone"></lightning-input>
+                                <template if:true={phoneError}>
+                                    <div class="slds-text-color_error slds-m-top_xx-small">{phoneError}</div>
+                                </template>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-combobox
+                                    name="emirate"
+                                    label="Select Emirate"
+                                    value={emirate}
+                                    placeholder="Choose Emirate"
+                                    options={emirateOptions}
+                                    onchange={handleChange}
+                                    data-id="emirate">
+                                </lightning-combobox>
+                                <template if:true={emirateError}>
+                                    <div class="slds-text-color_error slds-m-top_xx-small">{emirateError}</div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <template if:true={serverMessage}>
+                            <div class="slds-text-color_error slds-m-top_medium">{serverMessage}</div>
+                        </template>
+
+                         <div class="slds-m-top_medium slds-grid slds-grid_align-center slds-gutters">
+    <div class="slds-col">
+        <lightning-button 
+            variant="brand" 
+            label="Clear" 
+            onclick={handleBackClick}>
+        </lightning-button>
+    </div>
+
+    <div class="slds-col">
+        <lightning-button 
+            variant="brand" 
+            label="Sign Up" 
+            onclick={handleSubmit}>
+        </lightning-button>
+    </div>
+</div>
+
+
+
+
+
+                    </div>
+                </lightning-card>
+            </template>
+
+          <!--  <template if:true={showConversionModal}>
+                <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">Convert Lead</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <p>Lead created successfully. Do you want to convert it into an Opportunity?</p>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning-button label="Cancel" onclick={handleCancelConversion}></lightning-button>
+                            <lightning-button variant="brand" label="Convert Lead" onclick={handleConvertLead} class="slds-m-left_small"></lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template> --->
+
+             <template if:true={showConversionModal}>
+    <lightning-card title="Lead Summary" icon-name="standard:lead" class="signup-card">
+        <div class="slds-var-p-horizontal_medium slds-var-p-vertical_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <!--<lightning-icon icon-name="standard:user" size="small" class="slds-m-right_x-small"></lightning-icon> -->
+                    <strong>Lead Name:</strong> {fullName}
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                   <!-- <lightning-icon icon-name="standard:record" size="small" class="slds-m-right_x-small"></lightning-icon> -->
+                    <strong>Lead Record:</strong> 
+                    <a href={leadUrl} target="_blank" class="slds-text-link">View</a>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                   <!-- <lightning-icon icon-name="standard:email" size="small"  class="slds-m-right_x-small slds-text-link"></lightning-icon> -->
+                    <strong>Email:</strong> {femail}
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                  <!--  <lightning-icon icon-name="standard:location" size="small" class="slds-m-right_x-smallslds-icon-text-default slds-text-link"></lightning-icon> -->
+                    <strong>City:</strong> {emirate}
+                </div>
+            </div>
+
+            <div class="slds-m-top_large slds-grid slds-justify_center">
+                <lightning-button 
+                    label="Cancel" 
+                    onclick={handleCancelConversion}>
+                </lightning-button>
+
+                <lightning-button 
+                    variant="brand" 
+                    label="Convert Lead" 
+                    onclick={handleConvertLead} 
+                    class="slds-m-left_medium">
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
+
+
+
+            <template if:true={showSignUpSummary}>
+                <lightning-card title="Conversion Summary" icon-name="standard:opportunity" class="signup-card">
+                    <div class="slds-var-p-horizontal_medium slds-var-p-vertical_small">
+                        <p><strong>Opportunity:</strong> {opptyName}</p>
+                        <p><strong>Link: </strong> <a href={opptyUrl} target="_blank" class="slds-text-link">View</a></p>
+                        <p><strong>Contact Email:</strong> {femail}</p>
+                        <p><strong>City:</strong> {emirate}</p>
+                        <p><strong>Temperature:</strong> {temp} °C</p>
+
+                        <div class="slds-m-top_medium">
+                            <lightning-button label="Back to Sign-Up" onclick={handleBackClick}></lightning-button>
+                        </div>
+                    </div>
+                </lightning-card>
+            </template>
+   
+</template>
